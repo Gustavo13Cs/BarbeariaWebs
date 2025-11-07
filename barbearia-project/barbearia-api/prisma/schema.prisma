@@ -1,15 +1,63 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
-generator client {
-  provider = "prisma-client"
-  output   = "../src/generated/prisma"
+datasource db {
+  provider = "mysql" // Informa ao Prisma que estamos usando MySQL
+  url      = env("DATABASE_URL") // Pega a string de conexão do arquivo .env
 }
 
-datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
+generator client {
+  provider = "prisma-client-js" 
+}
+
+enum Role {
+  CLIENT
+  BARBER
+}
+
+enum BookingStatus {
+  SCHEDULED // Agendado
+  COMPLETED // Concluído
+  CANCELED  // Cancelado
+}
+
+model User {
+  id        String   @id @default(uuid()) // ID único universal
+  name      String
+  email     String   @unique // O e-mail deve ser único no banco
+  password  String   // Armazenará a senha criptografada
+  phone     String?  // O '?' marca o campo como opcional
+  role      Role     @default(CLIENT) // Por padrão, todo novo usuário é CLIENT
+
+  bookings  Booking[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Service {
+  id                String   @id @default(uuid())
+  name              String   // Ex: "Corte de Cabelo", "Barba"
+  price             Decimal  @db.Decimal(10, 2) // Ótimo para dinheiro (ex: 50.00)
+  durationInMinutes Int      // Ex: 30 (para 30 minutos)
+
+  bookings          Booking[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+
+model Booking {
+  id        String        @id @default(uuid())
+  startTime DateTime      // Data e hora de início do agendamento
+  status    BookingStatus @default(SCHEDULED)
+
+  // Chave estrangeira para o Usuário
+  userId    String
+  user      User   @relation(fields: [userId], references: [id])
+
+  // Chave estrangeira para o Serviço
+  serviceId String
+  service   Service @relation(fields: [serviceId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
