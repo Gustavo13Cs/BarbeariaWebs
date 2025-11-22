@@ -16,7 +16,7 @@ export class CreateServiceService {
     });
 
     if (serviceAlreadyExists) {
-      throw new Error("Service already exists");
+      throw new Error("O serviço já existe");
     }
 
     const service = await prisma.service.create({

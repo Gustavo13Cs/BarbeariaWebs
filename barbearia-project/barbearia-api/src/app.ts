@@ -3,6 +3,7 @@ import express from 'express';
 import { userRoutes } from './routes/userRoutes';
 import { authRoutes } from './routes/authRoutes';
 import { serviceRoutes } from './routes/serviceRoutes';
+import { bookingRoutes } from './routes/bookingRoutes';
 
 class App {
   public server: express.Application;
@@ -25,6 +26,7 @@ class App {
     this.server.use('/users', userRoutes); 
     this.server.use('/auth', authRoutes);
     this.server.use('/services', serviceRoutes);
+    this.server.use('/bookings', bookingRoutes);
   }
 }
 
