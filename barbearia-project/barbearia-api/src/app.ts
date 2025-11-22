@@ -2,6 +2,7 @@ import 'dotenv/config';
 import express from 'express';
 import { userRoutes } from './routes/userRoutes';
 import { authRoutes } from './routes/authRoutes';
+import { serviceRoutes } from './routes/serviceRoutes';
 
 class App {
   public server: express.Application;
@@ -23,6 +24,7 @@ class App {
 
     this.server.use('/users', userRoutes); 
     this.server.use('/auth', authRoutes);
+    this.server.use('/services', serviceRoutes);
   }
 }
 
