@@ -4,6 +4,7 @@ import { userRoutes } from './routes/userRoutes';
 import { authRoutes } from './routes/authRoutes';
 import { serviceRoutes } from './routes/serviceRoutes';
 import { bookingRoutes } from './routes/bookingRoutes';
+import cors from 'cors';
 
 class App {
   public server: express.Application;
@@ -16,6 +17,7 @@ class App {
 
   private middlewares(): void {
     this.server.use(express.json());
+    this.server.use(cors());
   }
 
   private routes(): void {
