@@ -41,7 +41,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const { token, id, name, role } = response.data;
 
       setCookie(undefined, 'barbearia.token', token, {
-        maxAge: 60 * 60 * 24 * 30, // 30 dias
+        maxAge: 60 * 60 * 24 * 30, 
         path: '/'
       });
 
@@ -55,6 +55,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       });
 
       console.log("Logado com sucesso!");
+      router.push('/dashboard');
       
 
     } catch (err) {
