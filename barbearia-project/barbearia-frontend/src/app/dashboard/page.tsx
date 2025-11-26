@@ -75,7 +75,9 @@ export default function Dashboard() {
           <h1 className="text-xl font-bold text-yellow-500">BarberPro</h1>
           <div className="flex items-center gap-4">
             <div className="text-right">
-              <div className="text-sm text-gray-400">Olá,</div>
+              <div className="text-xs text-yellow-500 font-bold">
+                {user?.role === 'BARBER' ? 'ÁREA DO BARBEIRO' : 'CLIENTE VIP'}
+              </div>
               <div className="font-bold">{user?.name}</div>
             </div>
             {/* Futuro botão de Sair */}
@@ -84,6 +86,21 @@ export default function Dashboard() {
       </header>
 
       <main className="max-w-4xl mx-auto mt-8 p-4">
+
+        {user?.role === 'BARBER' && (
+          <div className="mb-8 p-6 bg-gray-800 rounded-lg border border-yellow-600/50">
+            <h2 className="text-xl font-bold text-yellow-500 mb-4">Gerenciamento</h2>
+            <div className="flex gap-4">
+              <button className="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded text-white font-medium transition">
+                Meus Serviços
+              </button>
+              <button className="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded text-white font-medium transition">
+                Agenda Completa
+              </button>
+            </div>
+          </div>
+        )}
+
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-bold">Meus Agendamentos</h2>
           <Link href="/dashboard/new">
