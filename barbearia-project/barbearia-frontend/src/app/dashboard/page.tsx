@@ -97,9 +97,11 @@ export default function Dashboard() {
           <div className="mb-8 p-6 bg-gray-800 rounded-lg border border-yellow-600/50">
             <h2 className="text-xl font-bold text-yellow-500 mb-4">Gerenciamento</h2>
             <div className="flex gap-4">
-              <button className="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded text-white font-medium transition">
-                Meus Serviços
-              </button>
+              <Link href="/dashboard/services">
+                <button className="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded text-white font-medium transition">
+                  Meus Serviços
+                </button>
+              </Link>
               <button className="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded text-white font-medium transition">
                 Agenda Completa
               </button>
