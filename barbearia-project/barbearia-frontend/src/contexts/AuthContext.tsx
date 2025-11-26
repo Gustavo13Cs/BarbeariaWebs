@@ -1,7 +1,7 @@
 "use client"
 
 import { createContext, type ReactNode, useState, useContext } from "react"
-import { setCookie } from "nookies"
+import { setCookie, parseCookies, destroyCookie } from "nookies"
 import { useRouter } from "next/navigation"
 import { api } from "../services/api"
 
@@ -21,6 +21,7 @@ interface AuthContextData {
   user: UserProps | undefined
   isAuthenticated: boolean
   signIn: (credentials: SignInData) => Promise<void>
+  signOut: () => void;
 }
 
 export const AuthContext = createContext({} as AuthContextData)
@@ -62,7 +63,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }
 
-  return <AuthContext.Provider value={{ user, isAuthenticated, signIn }}>{children}</AuthContext.Provider>
+  function signOut() {
+  try {
+    destroyCookie(undefined, 'barbearia.token');
+    setUser(undefined);
+    router.push('/');
+  } catch {
+    console.log('Erro ao deslogar');
+  }
+}
+  return <AuthContext.Provider value={{ user, isAuthenticated, signIn,signOut }}>{children}</AuthContext.Provider>
 }
 
 export function useAuth() {
