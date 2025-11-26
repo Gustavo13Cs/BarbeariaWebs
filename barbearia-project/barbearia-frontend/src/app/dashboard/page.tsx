@@ -3,6 +3,7 @@
 import { useContext, useState, useEffect } from 'react';
 import { AuthContext } from '@/contexts/AuthContext';
 import { api } from '@/services/api';
+import Link from 'next/link';
 
 interface ServiceProps {
   id: string;
@@ -20,18 +21,42 @@ interface BookingProps {
 export default function Dashboard() {
   const { user } = useContext(AuthContext);
   const [bookings, setBookings] = useState<BookingProps[]>([]);
-  useEffect(() => {
-    async function loadBookings() {
-      try {
-        const response = await api.get('/bookings');
-        setBookings(response.data);
-      } catch (err) {
-        console.log(err);
-      }
-    }
 
+  async function loadBookings() {
+    try {
+      const response = await api.get('/bookings');
+      setBookings(response.data);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+   useEffect(() => {
     loadBookings();
   }, []);
+
+  async function handleCancel(booking_id: string) {
+    const confirm = window.confirm("Tem certeza que deseja cancelar este agendamento?");
+    
+    if (!confirm) return;
+
+    try {
+      await api.delete('/bookings', {
+        params: {
+          booking_id: booking_id
+        }
+      });
+
+      alert("Agendamento cancelado!");
+      loadBookings(); 
+
+    } catch (err) {
+      console.log(err);
+      alert("Erro ao cancelar agendamento.");
+    }
+  }
+
+
 
   function formatDate(dateString: string) {
     const date = new Date(dateString);
@@ -61,9 +86,11 @@ export default function Dashboard() {
       <main className="max-w-4xl mx-auto mt-8 p-4">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-bold">Meus Agendamentos</h2>
-          <button className="px-4 py-2 bg-yellow-500 text-gray-900 font-bold rounded hover:bg-yellow-400 transition transform hover:scale-105">
-            + Novo Agendamento
-          </button>
+          <Link href="/dashboard/new">
+        <button className="px-4 py-2 bg-primary text-primary-foreground font-bold rounded hover:bg-primary/90 transition transform hover:scale-105">
+          + Novo Agendamento
+        </button>
+      </Link>
         </div>
         
         {/* 3. Renderização Condicional */}
@@ -96,7 +123,10 @@ export default function Dashboard() {
                   </span>
                   
                   {}
-                  <button className="text-red-400 text-sm hover:text-red-300">
+                  <button 
+                    onClick={() => handleCancel(booking.id)}
+                    className="text-red-400 text-sm hover:text-red-300 transition"
+                  >
                     Cancelar
                   </button>
                 </div>
