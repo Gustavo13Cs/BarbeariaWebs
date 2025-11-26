@@ -1,27 +1,27 @@
-'use client';
+"use client"
 
-import { useContext, useState, FormEvent } from 'react';
-import { AuthContext } from '@/contexts/AuthContext';
-import './login.css'; 
+import { useContext, useState, type FormEvent } from "react"
+import { AuthContext } from "@/contexts/AuthContext"
+import "./login.css"
 
 export default function Home() {
-  const { signIn } = useContext(AuthContext);
+  const { signIn } = useContext(AuthContext)
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const [loading, setLoading] = useState(false)
 
   async function handleLogin(event: FormEvent) {
-    event.preventDefault();
+    event.preventDefault()
 
     if (!email || !password) {
-      alert("Preencha todos os campos");
-      return;
+      alert("Preencha todos os campos")
+      return
     }
 
-    setLoading(true);
-    await signIn({ email, password });
-    setLoading(false);
+    setLoading(true)
+    await signIn({ email, password })
+    setLoading(false)
   }
 
   return (
@@ -29,7 +29,6 @@ export default function Home() {
       <div className="login-box">
         <div className="login-header">
           <div className="logo-container">
-            {/* Ícone SVG da Barbearia */}
             <svg className="logo-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path
                 d="M12 2L2 7V12C2 17 6 21.5 12 22C18 21.5 22 17 22 12V7L12 2Z"
@@ -81,5 +80,5 @@ export default function Home() {
         </div>
       </div>
     </div>
-  );
+  )
 }

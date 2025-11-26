@@ -1,72 +1,74 @@
-'use client'; 
+"use client"
 
-import { createContext, ReactNode, useState } from 'react';
-import { setCookie, parseCookies } from 'nookies';
-import { useRouter } from 'next/navigation'; 
-import { api } from '../services/api';
+import { createContext, type ReactNode, useState, useContext } from "react"
+import { setCookie } from "nookies"
+import { useRouter } from "next/navigation"
+import { api } from "../services/api"
 
 interface UserProps {
-  id: string;
-  name: string;
-  email: string;
-  role: string;
+  id: string
+  name: string
+  email: string
+  role: string
 }
 
 interface SignInData {
-  email: string;
-  password: string;
+  email: string
+  password: string
 }
 
 interface AuthContextData {
-  user: UserProps | undefined;
-  isAuthenticated: boolean;
-  signIn: (credentials: SignInData) => Promise<void>;
+  user: UserProps | undefined
+  isAuthenticated: boolean
+  signIn: (credentials: SignInData) => Promise<void>
 }
 
-export const AuthContext = createContext({} as AuthContextData);
+export const AuthContext = createContext({} as AuthContextData)
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const router = useRouter(); 
-  const [user, setUser] = useState<UserProps>();
+  const router = useRouter()
+  const [user, setUser] = useState<UserProps>()
 
-  const isAuthenticated = !!user;
+  const isAuthenticated = !!user
 
   async function signIn({ email, password }: SignInData) {
     try {
-      const response = await api.post('/auth/login', {
+      const response = await api.post("/auth/login", {
         email,
-        password
-      });
+        password,
+      })
 
-      const { token, id, name, role } = response.data;
+      const { token, id, name, role } = response.data
 
-      setCookie(undefined, 'barbearia.token', token, {
-        maxAge: 60 * 60 * 24 * 30, 
-        path: '/'
-      });
+      setCookie(undefined, "barbearia.token", token, {
+        maxAge: 60 * 60 * 24 * 30,
+        path: "/",
+      })
 
-      api.defaults.headers['Authorization'] = `Bearer ${token}`;
+      api.defaults.headers["Authorization"] = `Bearer ${token}`
 
       setUser({
         id,
         name,
         email,
-        role: role || 'CLIENT'
-      });
+        role: role || "CLIENT",
+      })
 
-      console.log("Logado com sucesso!");
-      router.push('/dashboard');
-      
-
+      console.log("Logado com sucesso!")
+      router.push("/dashboard")
     } catch (err) {
-      console.log("Erro ao logar", err);
-      alert("Erro ao logar. Verifique o console.");
+      console.log("Erro ao logar", err)
+      throw err
     }
   }
 
-  return (
-    <AuthContext.Provider value={{ user, isAuthenticated, signIn }}>
-      {children}
-    </AuthContext.Provider>
-  )
+  return <AuthContext.Provider value={{ user, isAuthenticated, signIn }}>{children}</AuthContext.Provider>
+}
+
+export function useAuth() {
+  const context = useContext(AuthContext)
+  if (!context) {
+    throw new Error("useAuth deve ser usado dentro de um AuthProvider")
+  }
+  return context
 }

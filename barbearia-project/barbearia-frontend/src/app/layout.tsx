@@ -1,13 +1,11 @@
-import '@/styles/globals.css'
-import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
-import { AuthProvider } from '@/contexts/AuthContext'
-
-const inter = Inter({ subsets: ['latin'] })
+import type React from "react"
+import type { Metadata } from "next"
+import { AuthProvider } from "@/contexts/AuthContext"
+import "@/styles/globals.css"
 
 export const metadata: Metadata = {
-  title: 'Barbearia VIP',
-  description: 'Agende seu corte online',
+  title: "Barbeiro - Sistema de Gerenciamento",
+  description: "Sistema de gerenciamento para barbearias",
 }
 
 export default function RootLayout({
@@ -16,12 +14,9 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="pt-br">
-      <body className={inter.className}>
-        {}
-        <AuthProvider>
-          {children}
-        </AuthProvider>
+    <html lang="pt-BR">
+      <body>
+        <AuthProvider>{children}</AuthProvider>
       </body>
     </html>
   )
